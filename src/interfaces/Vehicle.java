@@ -20,4 +20,26 @@ public interface Vehicle extends Serializable {
         throws NoSuchModelNameException;
     public void setModelName(String oldName, String newName)
         throws NoSuchModelNameException, DuplicateModelNameException;
+    
+    /*
+    default boolean equals(Vehicle v) {
+        boolean equals =
+            getClass() == v.getClass() &&
+            getBrand().equals(v.getBrand()) &&
+            getModelCount() == v.getModelCount();
+        
+        String[]
+            thisNames = getModelNames(),
+            otherNames = v.getModelNames();
+        double[]
+            thisPrices = getModelPrices(),
+            otherPrices = v.getModelPrices();
+        for (int i = 0; i < thisPrices.length && equals; i++)
+            if (!thisNames[i].equals(otherNames[i]) ||
+                thisPrices[i] != otherPrices[i])
+                equals = false;
+        
+        return equals;
+    }
+    */
 }

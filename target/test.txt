@@ -1,6 +1,6 @@
 Motocycle
 BMW
 3
-Basic 1: $75.0
+Basic 1: $50.0
 Basic 2: $50.0
-Basic 3: $50.0
+Basic 3: $100.0

@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Vehicle v = null;
         exceptionTest(v);
+        System.out.println();
 
         v = new Motocycle("BMW", 3);
         String
@@ -62,6 +63,10 @@ public class Main {
 
         try (FileInputStream fis = new FileInputStream(filename)) {
             Vehicle v2 = VehicleUtils.inputVehicle(fis);
+
+            VehicleUtils.printVehicleInfo(v);
+            VehicleUtils.printVehicleInfo(v2);
+
             System.out.println(
                 "i/o test: v2 is " +
                 ((v.equals(v2)) ? "" : "NOT ") +
@@ -81,6 +86,10 @@ public class Main {
 
         try (FileReader fr = new FileReader(filename)) {
             Vehicle v2 = VehicleUtils.readVehicle(fr);
+
+            VehicleUtils.printVehicleInfo(v);
+            VehicleUtils.printVehicleInfo(v2);
+
             System.out.println(
                 "write/read test: v2 is " +
                 ((v.equals(v2)) ? "" : "NOT ") +
@@ -100,11 +109,16 @@ public class Main {
             Logger.log("write: system.in");
             Vehicle v2 = VehicleUtils.readVehicle(new InputStreamReader(System.in));
             if (v2 != null)
+            {
+                VehicleUtils.printVehicleInfo(v);
+                VehicleUtils.printVehicleInfo(v2);
+
                 System.out.println(
                     "console test: v2 is " +
                     ((v.equals(v2)) ? "" : "NOT ") +
                     "equal to v"
                 );
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -119,6 +133,10 @@ public class Main {
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             Vehicle v2 = (Vehicle)ois.readObject();
+
+            VehicleUtils.printVehicleInfo(v);
+            VehicleUtils.printVehicleInfo(v2);
+
             System.out.println(
                 "serialization test: v2 is " +
                 ((v.equals(v2)) ? "" : "NOT ") +
