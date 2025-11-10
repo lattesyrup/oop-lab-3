@@ -13,17 +13,20 @@ public class Main {
         String
             binFilename = "./target/test.bin",
             txtFilename = "./target/test.txt",
-            serFilename = "./target/test";
+            serFilename = "./target/test.ser";
 
         inputOutputTest(v, binFilename);
         System.out.println();
 
+        v = new Auto("Renault", 4);
         writeReadTest(v, txtFilename);
         System.out.println();
 
+        v = new Auto("Mercedes", 2);
         consoleInOutTest(v);
         System.out.println();
 
+        v = new Motocycle("Yamaha", 6);
         serializationTest(v, serFilename);
         System.out.println();
     }
@@ -103,7 +106,7 @@ public class Main {
     private static void consoleInOutTest(Vehicle v) {
         try {
             Logger.log("read: system.out");
-            VehicleUtils.writeVehicle(v, new PrintWriter(System.out));
+            VehicleUtils.writeVehicle(v, new OutputStreamWriter(System.out));
 
             System.out.println("for testing equality, type exactly what you see.\n");
             Logger.log("write: system.in");

@@ -41,3 +41,4 @@ java -cp target %MAIN_CLASS%
 echo.
 echo - программа завершена. -
 pause >nul
+cls

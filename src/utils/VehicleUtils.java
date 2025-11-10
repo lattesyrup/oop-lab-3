@@ -2,6 +2,7 @@ package utils;
 import java.io.*;
 import interfaces.*;
 import classes.*;
+import exceptions.NoSuchVehicleTypeException;
 
 public class VehicleUtils {
     public static double getAveragePrice(Vehicle v) {
@@ -27,7 +28,8 @@ public class VehicleUtils {
 
     public static void outputVehicle(Vehicle v, OutputStream out) {
         try (DataOutputStream dos = new DataOutputStream(out)) {
-            dos.writeBoolean(v.getClass() == Auto.class);
+            dos.writeInt(v.getClass().getSimpleName().length());
+            dos.write(v.getClass().getSimpleName().getBytes());
             dos.writeInt(v.getBrand().length());
             dos.write(v.getBrand().getBytes());
 
@@ -49,18 +51,24 @@ public class VehicleUtils {
         }
     }
 
-    public static Vehicle inputVehicle(InputStream in) {
+    public static Vehicle inputVehicle(InputStream in)
+    throws NoSuchVehicleTypeException {
         Vehicle v = null;
 
         try {
             DataInputStream dis = new DataInputStream(in);
 
-            boolean isAuto = dis.readBoolean();
+            String type = new String(dis.readNBytes(dis.readInt()));
             String brand = new String(dis.readNBytes(dis.readInt()));
-            v = (isAuto)
-                ? new Auto(brand)
-                : new Motocycle(brand);
-            // Logger.log("input: created vehicle " + brand + " from input...");
+            v = switch (type) {
+                case "Auto":
+                    yield new Auto(brand, 0);
+                case "Motocycle":
+                     yield new Motocycle(brand, 0);
+                default:
+                    throw new NoSuchVehicleTypeException("Error on input from " + in.getClass().getSimpleName());
+            };
+            // Logger.log("input: created " + v.getClass().getSimpleName() + " " + brand + " from input...");
 
             String name;
             double price;
@@ -74,7 +82,7 @@ public class VehicleUtils {
                 // Logger.log("added " + name + " with price $" + price + "...");
             }
 
-            if (!in.equals(System.in)) dis.close();
+            if (!in.equals(System.in)) dis.close(); // close in main
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -110,12 +118,17 @@ public class VehicleUtils {
         Vehicle v = null;
 
         try (BufferedReader br = new BufferedReader(in)) {
-            boolean isAuto = "Auto".equals(br.readLine());
+            String type = br.readLine();
             String brand = br.readLine();
-            v = (isAuto)
-                ? new Auto(brand)
-                : new Motocycle(brand);
-            Logger.log("reader: created vehicle " + brand + " from input...");
+            v = switch (type) {
+                case "Auto":
+                    yield new Auto(brand, 0);
+                case "Motocycle":
+                     yield new Motocycle(brand, 0);
+                default:
+                    throw new NoSuchVehicleTypeException("Error while reading " + in.getClass().getSimpleName());
+            };
+            Logger.log("reader: created " + v.getClass().getSimpleName() + " " + brand + " from input...");
 
             int modelCount = Integer.parseInt(br.readLine());
             Logger.log("reader: trying to create " + modelCount + " models...");
