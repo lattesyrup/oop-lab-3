@@ -1,7 +1,7 @@
 Auto
 Renault
 4
-Basic 1: $100.0
+Basic 1: $150.0
 Basic 2: $150.0
-Basic 3: $150.0
-Basic 4: $200.0
+Basic 3: $100.0
+Basic 4: $150.0

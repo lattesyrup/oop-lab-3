@@ -55,19 +55,10 @@ public class VehicleUtils {
     throws NoSuchVehicleTypeException {
         Vehicle v = null;
 
-        try {
-            DataInputStream dis = new DataInputStream(in);
-
+        try (DataInputStream dis = new DataInputStream(in)) {
             String type = new String(dis.readNBytes(dis.readInt()));
             String brand = new String(dis.readNBytes(dis.readInt()));
-            v = switch (type) {
-                case "Auto":
-                    yield new Auto(brand, 0);
-                case "Motocycle":
-                     yield new Motocycle(brand, 0);
-                default:
-                    throw new NoSuchVehicleTypeException("Error on input from " + in.getClass().getSimpleName());
-            };
+            v = createFromType(type, brand);
             // Logger.log("input: created " + v.getClass().getSimpleName() + " " + brand + " from input...");
 
             String name;
@@ -81,8 +72,6 @@ public class VehicleUtils {
                 v.addModel(name, price);
                 // Logger.log("added " + name + " with price $" + price + "...");
             }
-
-            if (!in.equals(System.in)) dis.close(); // close in main
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -120,18 +109,12 @@ public class VehicleUtils {
         try (BufferedReader br = new BufferedReader(in)) {
             String type = br.readLine();
             String brand = br.readLine();
-            v = switch (type) {
-                case "Auto":
-                    yield new Auto(brand, 0);
-                case "Motocycle":
-                     yield new Motocycle(brand, 0);
-                default:
-                    throw new NoSuchVehicleTypeException("Error while reading " + in.getClass().getSimpleName());
-            };
+            v = createFromType(type, brand);
             Logger.log("reader: created " + v.getClass().getSimpleName() + " " + brand + " from input...");
 
             int modelCount = Integer.parseInt(br.readLine());
             Logger.log("reader: trying to create " + modelCount + " models...");
+            Logger.log("reminder: model typing format is *exactly* \"<name>: $<price>\".");
 
             for (int i = 0; i < modelCount; i++) {
                 String[] line = br.readLine().split(": \\$");
@@ -145,5 +128,15 @@ public class VehicleUtils {
         }
 
         return v;
+    }
+
+    private static Vehicle createFromType(String type, String brand)
+    throws NoSuchVehicleTypeException {
+        Vehicle result = switch (type) {
+            case "Auto": yield new Auto(brand);
+            case "Motocycle": yield new Motocycle(brand);
+            default: throw new NoSuchVehicleTypeException("Error while reading class " + type);
+        };
+        return result;
     }
 }
